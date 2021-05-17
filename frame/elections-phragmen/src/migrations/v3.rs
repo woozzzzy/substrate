@@ -17,12 +17,13 @@
 
 //! Migrations to version [`3.0.0`], as denoted by the changelog.
 
-use codec::{Encode, Decode, FullCodec};
-use sp_std::prelude::*;
+use codec::{Decode, Encode, FullCodec};
 use frame_support::{
-	RuntimeDebug, weights::Weight, Twox64Concat,
 	traits::{GetPalletVersion, PalletVersion},
+	weights::Weight,
+	RuntimeDebug, Twox64Concat,
 };
+use sp_std::prelude::*;
 
 #[derive(Encode, Decode, Clone, Default, RuntimeDebug, PartialEq)]
 struct SeatHolder<AccountId, Balance> {
@@ -49,28 +50,28 @@ pub trait V2ToV3 {
 	/// Elections-phragmen currency balance.
 	type Balance: 'static + FullCodec + Copy;
 }
-
+// on Edgeware the pallet is used as `Elections`.
 frame_support::generate_storage_alias!(
-	PhragmenElection, Candidates<T: V2ToV3> => Value<Vec<(T::AccountId, T::Balance)>>
+	Elections, Candidates<T: V2ToV3> => Value<Vec<(T::AccountId, T::Balance)>>
 );
 frame_support::generate_storage_alias!(
-	PhragmenElection, Members<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
+	Elections, Members<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
 );
 frame_support::generate_storage_alias!(
-	PhragmenElection, RunnersUp<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
+	Elections, RunnersUp<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
 );
 frame_support::generate_storage_alias!(
-	PhragmenElection, Voting<T: V2ToV3> => Map<
+	Elections, Voting<T: V2ToV3> => Map<
 		(Twox64Concat, T::AccountId),
 		Voter<T::AccountId, T::Balance>
 	>
 );
 
-/// Apply all of the migrations from 2_0_0 to 3_0_0.
+/// Apply all of the migrations from ^2_0_0 to 3_0_0.
 ///
 /// ### Warning
 ///
-/// This code will **ONLY** check that the storage version is less than or equal to 2_0_0.
+/// This code will **ONLY** check that the storage version is less than or equal to ^2_0_0.
 /// Further check might be needed at the user runtime.
 ///
 /// Be aware that this migration is intended to be used only for the mentioned versions. Use
@@ -82,8 +83,9 @@ pub fn apply<T: V2ToV3>(old_voter_bond: T::Balance, old_candidacy_bond: T::Balan
 		"Running migration for elections-phragmen with storage version {:?}",
 		maybe_storage_version,
 	);
+	let min_version = PalletVersion::new(2, 0, 1); // on Edgeware it is 2.0.1
 	match maybe_storage_version {
-		Some(storage_version) if storage_version <= PalletVersion::new(2, 0, 0) => {
+		Some(storage_version) if storage_version <= min_version => {
 			migrate_voters_to_recorded_deposit::<T>(old_voter_bond);
 			migrate_candidates_to_recorded_deposit::<T>(old_candidacy_bond);
 			migrate_runners_up_to_recorded_deposit::<T>(old_candidacy_bond);
@@ -97,21 +99,19 @@ pub fn apply<T: V2ToV3>(old_voter_bond: T::Balance, old_candidacy_bond: T::Balan
 				maybe_storage_version,
 			);
 			0
-		},
+		}
 	}
 }
 
 /// Migrate from the old legacy voting bond (fixed) to the new one (per-vote dynamic).
 pub fn migrate_voters_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance) {
-	<Voting<T>>::translate::<(T::Balance, Vec<T::AccountId>), _>(
-		|_who, (stake, votes)| {
-			Some(Voter {
-				votes,
-				stake,
-				deposit: old_deposit,
-			})
-		},
-	);
+	<Voting<T>>::translate::<(T::Balance, Vec<T::AccountId>), _>(|_who, (stake, votes)| {
+		Some(Voter {
+			votes,
+			stake,
+			deposit: old_deposit,
+		})
+	});
 
 	log::info!(
 		target: "runtime::elections-phragmen",
@@ -122,50 +122,46 @@ pub fn migrate_voters_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance) {
 
 /// Migrate all candidates to recorded deposit.
 pub fn migrate_candidates_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance) {
-	let _ = <Candidates<T>>::translate::<Vec<T::AccountId>, _>(
-		|maybe_old_candidates| {
-			maybe_old_candidates.map(|old_candidates| {
-				log::info!(
-					target: "runtime::elections-phragmen",
-					"migrated {} candidate accounts.",
-					old_candidates.len(),
-				);
-				old_candidates
-					.into_iter()
-					.map(|c| (c, old_deposit))
-					.collect::<Vec<_>>()
-			})
-		},
-	);
+	let _ = <Candidates<T>>::translate::<Vec<T::AccountId>, _>(|maybe_old_candidates| {
+		maybe_old_candidates.map(|old_candidates| {
+			log::info!(
+				target: "runtime::elections-phragmen",
+				"migrated {} candidate accounts.",
+				old_candidates.len(),
+			);
+			old_candidates
+				.into_iter()
+				.map(|c| (c, old_deposit))
+				.collect::<Vec<_>>()
+		})
+	});
 }
 
 /// Migrate all members to recorded deposit.
 pub fn migrate_members_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance) {
-	let _ = <Members<T>>::translate::<Vec<(T::AccountId, T::Balance)>, _>(
-		|maybe_old_members| {
-			maybe_old_members.map(|old_members| {
-				log::info!(
-					target: "runtime::elections-phragmen",
-					"migrated {} member accounts.",
-					old_members.len(),
-				);
-				old_members
-					.into_iter()
-					.map(|(who, stake)| SeatHolder {
-						who,
-						stake,
-						deposit: old_deposit,
-					})
-					.collect::<Vec<_>>()
-			})
-		},
-	);
+	let _ = <Members<T>>::translate::<Vec<(T::AccountId, T::Balance)>, _>(|maybe_old_members| {
+		maybe_old_members.map(|old_members| {
+			log::info!(
+				target: "runtime::elections-phragmen",
+				"migrated {} member accounts.",
+				old_members.len(),
+			);
+			old_members
+				.into_iter()
+				.map(|(who, stake)| SeatHolder {
+					who,
+					stake,
+					deposit: old_deposit,
+				})
+				.collect::<Vec<_>>()
+		})
+	});
 }
 
 /// Migrate all runners-up to recorded deposit.
 pub fn migrate_runners_up_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance) {
-	let _ = <RunnersUp<T>>::translate::<Vec<(T::AccountId, T::Balance)>, _>(
-		|maybe_old_runners_up| {
+	let _ =
+		<RunnersUp<T>>::translate::<Vec<(T::AccountId, T::Balance)>, _>(|maybe_old_runners_up| {
 			maybe_old_runners_up.map(|old_runners_up| {
 				log::info!(
 					target: "runtime::elections-phragmen",
@@ -181,6 +177,5 @@ pub fn migrate_runners_up_to_recorded_deposit<T: V2ToV3>(old_deposit: T::Balance
 					})
 					.collect::<Vec<_>>()
 			})
-		},
-	);
+		});
 }
