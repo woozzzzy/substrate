@@ -50,18 +50,18 @@ pub trait V2ToV3 {
 	/// Elections-phragmen currency balance.
 	type Balance: 'static + FullCodec + Copy;
 }
-// on Edgeware the pallet is used as `Elections`.
+
 frame_support::generate_storage_alias!(
-	Elections, Candidates<T: V2ToV3> => Value<Vec<(T::AccountId, T::Balance)>>
+	PhragmenElection, Candidates<T: V2ToV3> => Value<Vec<(T::AccountId, T::Balance)>>
 );
 frame_support::generate_storage_alias!(
-	Elections, Members<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
+	PhragmenElection, Members<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
 );
 frame_support::generate_storage_alias!(
-	Elections, RunnersUp<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
+	PhragmenElection, RunnersUp<T: V2ToV3> => Value<Vec<SeatHolder<T::AccountId, T::Balance>>>
 );
 frame_support::generate_storage_alias!(
-	Elections, Voting<T: V2ToV3> => Map<
+	PhragmenElection, Voting<T: V2ToV3> => Map<
 		(Twox64Concat, T::AccountId),
 		Voter<T::AccountId, T::Balance>
 	>
@@ -83,9 +83,9 @@ pub fn apply<T: V2ToV3>(old_voter_bond: T::Balance, old_candidacy_bond: T::Balan
 		"Running migration for elections-phragmen with storage version {:?}",
 		maybe_storage_version,
 	);
-	let min_version = PalletVersion::new(2, 0, 1); // on Edgeware it is 2.0.1
 	match maybe_storage_version {
-		Some(storage_version) if storage_version <= min_version => {
+		// Edgeware version is 2.0.1
+		Some(storage_version) if storage_version <= PalletVersion::new(2, 0, 1) => {
 			migrate_voters_to_recorded_deposit::<T>(old_voter_bond);
 			migrate_candidates_to_recorded_deposit::<T>(old_candidacy_bond);
 			migrate_runners_up_to_recorded_deposit::<T>(old_candidacy_bond);
