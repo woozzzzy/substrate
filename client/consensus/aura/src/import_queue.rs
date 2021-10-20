@@ -86,6 +86,12 @@ fn check_header<C, B: BlockT, P: Pair>(
 
 		let pre_hash = header.hash();
 
+		sp_std::if_std! {
+			println!("header = {:#?}",&header);
+			println!("pre-hash = {:#?}",pre_hash);
+			println!("expected_author = {:#?}",expected_author.as_ref());
+		}
+
 		if P::verify(&sig, pre_hash.as_ref(), expected_author) {
 			if check_for_equivocation.check_for_equivocation() {
 				if let Some(equivocation_proof) = check_equivocation(
