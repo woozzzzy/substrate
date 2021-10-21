@@ -147,7 +147,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			sp_std::if_std! {				
 				let mut i : u32 = 0;
 				println!("keys");
-				for id in keys {
+				for id in &keys {
 					println!("ck{:?}={:?}",i,id);
 					i=i+1;
 				}
@@ -157,7 +157,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			sp_std::if_std! {				
 				let mut i : u32 = 0;
 				println!("nk");
-				for id in next_keys {
+				for id in &next_keys {
 					println!("nk{:?}={:?}",i,id);
 					i=i+1;
 				}
