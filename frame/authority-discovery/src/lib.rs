@@ -145,9 +145,10 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		if changed {
 			let keys = validators.map(|x| x.1);
 			sp_std::if_std! {				
+				let keys2 = validators.map(|x| x.1);
 				let mut i : u32 = 0;
 				println!("keys");
-				for id in keys.clone() {
+				for id in keys2 {
 					println!("ck{:?}={:?}",i,id);
 					i=i+1;
 				}
@@ -155,9 +156,10 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			Keys::<T>::put(keys.collect::<Vec<_>>());
 			let next_keys = queued_validators.map(|x| x.1);			
 			sp_std::if_std! {				
+				let next_keys2 = queued_validators.map(|x| x.1);
 				let mut i : u32 = 0;
 				println!("nk");
-				for id in next_keys.clone() {
+				for id in next_keys2 {
 					println!("nk{:?}={:?}",i,id);
 					i=i+1;
 				}
