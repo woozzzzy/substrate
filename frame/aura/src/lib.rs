@@ -211,12 +211,34 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		if changed {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
 			let last_authorities = Self::authorities();
+			sp_std::if_std! {
+				println!("na {:?}",next_authorities);
+				println!("la {:?}",last_authorities);
+			// 	let mut i : u32 = 0;
+			// 	println!("na");
+			// 	for id in next_authorities {
+			// 		println!("Authority{:?}={:?}",i,id);
+			// 		i=i+1;
+			// 	}
+			// 	println!("la");
+			// 	for id in last_authorities {
+			// 		println!("Authority{:?}={:?}",i,id);
+			// 		i=i+1;
+			// 	}
+			}		
 			if last_authorities != next_authorities {
 				let bounded = <WeakBoundedVec<_, T::MaxAuthorities>>::force_from(
 					next_authorities,
 					Some("AuRa new session"),
 				);
+				sp_std::if_std! {
+					println!("authority changed");
+				}
 				Self::change_authorities(bounded);
+			}
+		}else{
+			sp_std::if_std! {
+				println!("changed=false");
 			}
 		}
 	}
