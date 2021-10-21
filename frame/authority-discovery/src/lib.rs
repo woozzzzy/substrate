@@ -150,6 +150,10 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 				),
 			);
 
+			sp_std::if_std! {
+				println!("ck {:?}",bounded_keys.clone());
+			}
+
 			Keys::<T>::put(bounded_keys);
 
 			let next_keys = queued_validators.map(|x| x.1).collect::<Vec<_>>();
@@ -162,7 +166,14 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 				),
 			);
 
+			sp_std::if_std! {
+				println!("nk {:?}",next_bounded_keys.clone());
+			}
 			NextKeys::<T>::put(next_bounded_keys);
+		}else{
+			sp_std::if_std! {
+				println!("changed=false");
+			}
 		}
 	}
 

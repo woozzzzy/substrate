@@ -200,6 +200,9 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		I: Iterator<Item = (&'a T::AccountId, T::AuthorityId)>,
 	{
 		let authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
+		sp_std::if_std! {
+			println!("ia {:?}",authorities);
+		}
 		Self::initialize_authorities(&authorities);
 	}
 
