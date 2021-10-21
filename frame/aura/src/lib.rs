@@ -183,17 +183,19 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
 			let last_authorities = Self::authorities();
 			sp_std::if_std! {
-				let mut i : u32 = 0;
-				println!("na");
-				for id in next_authorities {
-					println!("Authority{:?}={:?}",i,id.as_ref());
-					i=i+1;
-				}
-				println!("la");
-				for id in last_authorities {
-					println!("Authority{:?}={:?}",i,id.as_ref());
-					i=i+1;
-				}
+				println!("na {:?}",next_authorities);
+				println!("la {:?}",last_authorities);
+				// let mut i : u32 = 0;
+				// println!("na");
+				// for id in next_authorities {
+				// 	println!("Authority{:?}={:?}",i,id.as_ref());
+				// 	i=i+1;
+				// }
+				// println!("la");
+				// for id in last_authorities {
+				// 	println!("Authority{:?}={:?}",i,id.as_ref());
+				// 	i=i+1;
+				// }
 			}
 			if next_authorities != last_authorities {
 				sp_std::if_std! {
