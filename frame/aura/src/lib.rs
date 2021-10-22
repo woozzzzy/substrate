@@ -136,6 +136,9 @@ impl<T: Config> Pallet<T> {
 	}
 
 	fn initialize_authorities(authorities: &[T::AuthorityId]) {
+		sp_std::if_std! {
+			println!("bb aura init authorities={:?}",authorities);
+		}
 		if !authorities.is_empty() {
 			assert!(<Authorities<T>>::get().is_empty(), "Authorities are already initialized!");
 			<Authorities<T>>::put(authorities);
