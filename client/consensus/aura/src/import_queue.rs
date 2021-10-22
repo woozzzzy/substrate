@@ -87,7 +87,7 @@ fn check_header<C, B: BlockT, P: Pair>(
 		let pre_hash = header.hash();
 		
 		sp_std::if_std! {
-			println!("slot = {:?}",slot);			
+			println!("slot = {:?}, authority size = {:?}",slot,authorities.len());			
 			// println!("authorities");
 			// let mut i : u32 = 0;
 			// for id in authorities {
