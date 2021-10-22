@@ -88,6 +88,7 @@ pub mod pallet {
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
 		fn on_initialize(_: T::BlockNumber) -> Weight {
+			sp_runtime::print("in on_initialize (print)");
 			if let Some(new_slot) = Self::current_slot_from_digests() {
 				let current_slot = CurrentSlot::<T>::get();
 
@@ -149,6 +150,7 @@ pub mod pallet {
 
 impl<T: Config> Pallet<T> {
 	fn change_authorities(new: WeakBoundedVec<T::AuthorityId, T::MaxAuthorities>) {
+		sp_runtime::print("in change_authorities (print)");
 		<Authorities<T>>::put(&new);
 
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(
@@ -159,6 +161,7 @@ impl<T: Config> Pallet<T> {
 	}
 
 	fn initialize_authorities(authorities: &[T::AuthorityId]) {
+		sp_runtime::print("in initialize_authorities (print)");
 		if !authorities.is_empty() {
 			assert!(<Authorities<T>>::get().is_empty(), "Authorities are already initialized!");
 			let bounded = <BoundedSlice<'_, _, T::MaxAuthorities>>::try_from(authorities)
@@ -182,6 +185,7 @@ impl<T: Config> Pallet<T> {
 
 	/// Determine the Aura slot-duration based on the Timestamp module configuration.
 	pub fn slot_duration() -> T::Moment {
+		sp_runtime::print("in slot_duration (print)");
 		// we double the minimum block-period so each author can always propose within
 		// the majority of its slot.
 		<T as pallet_timestamp::Config>::MinimumPeriod::get().saturating_mul(2u32.into())
@@ -199,6 +203,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	where
 		I: Iterator<Item = (&'a T::AccountId, T::AuthorityId)>,
 	{
+		sp_runtime::print("in on_genesis_session (print)");
 		let authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
 		sp_std::if_std! {
 			println!("ia {:?}",authorities);
@@ -210,6 +215,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	where
 		I: Iterator<Item = (&'a T::AccountId, T::AuthorityId)>,
 	{
+		sp_runtime::print("in on_new_session (print)");
 		// instant changes
 		if changed {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
