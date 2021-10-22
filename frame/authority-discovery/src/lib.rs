@@ -137,7 +137,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	where
 		I: Iterator<Item = (&'a T::AccountId, Self::Key)>,
 	{
-		log::info!("called by on_genesis_session ad {:?}", authorities);
+		log::info!("called by on_genesis_session ad");
 		Self::initialize_keys(&authorities.map(|x| x.1).collect::<Vec<_>>());
 	}
 
