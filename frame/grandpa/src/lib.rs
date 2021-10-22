@@ -410,6 +410,9 @@ impl<T: Config> Module<T> {
 		forced: Option<T::BlockNumber>,
 	) -> DispatchResult {
 		if !<PendingChange<T>>::exists() {
+			sp_std::if_std! {
+				println!("Schedule change next authorities={:?}",next_authorities);
+			}
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 
 			if let Some(_) = forced {
