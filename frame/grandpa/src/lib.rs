@@ -354,6 +354,9 @@ impl<T: Config> Module<T> {
 	/// Set the current set of authorities, along with their respective weights.
 	fn set_grandpa_authorities(authorities: &AuthorityList) {
 		storage::unhashed::put(
+			sp_std::if_std! {
+				println!("in set grandpa authorities")
+			}
 			GRANDPA_AUTHORITIES_KEY,
 			&VersionedAuthorityList::from(authorities),
 		);
