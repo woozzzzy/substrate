@@ -412,6 +412,7 @@ impl<T: Config> Module<T> {
 		in_blocks: T::BlockNumber,
 		forced: Option<T::BlockNumber>,
 	) -> DispatchResult {
+		log::info!("called by schedule_change gp {:?}", &next_authorities);
 		if !<PendingChange<T>>::exists() {
 			sp_std::if_std! {
 				println!("bb Schedule change next authorities={:?}",next_authorities);

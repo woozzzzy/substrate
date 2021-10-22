@@ -137,6 +137,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	where
 		I: Iterator<Item = (&'a T::AccountId, Self::Key)>,
 	{
+		log::info!("called by on_genesis_session ad {:?}", authorities);
 		Self::initialize_keys(&authorities.map(|x| x.1).collect::<Vec<_>>());
 	}
 
@@ -144,6 +145,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	where
 		I: Iterator<Item = (&'a T::AccountId, Self::Key)>,
 	{
+		log::info!("called by on_new_session ad {:?}", changed);
 		// Remember who the authorities are for the new and next session.
 		if changed {
 			let keys = validators.map(|x| x.1).collect::<Vec<_>>();
