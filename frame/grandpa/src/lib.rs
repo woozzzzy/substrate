@@ -354,7 +354,7 @@ impl<T: Config> Module<T> {
 	/// Set the current set of authorities, along with their respective weights.
 	fn set_grandpa_authorities(authorities: &AuthorityList) {
 		sp_std::if_std! {
-			println!("in set grandpa authorities");
+			println!("bb in set grandpa authorities");
 		}
 		storage::unhashed::put(
 			GRANDPA_AUTHORITIES_KEY,
@@ -414,7 +414,7 @@ impl<T: Config> Module<T> {
 	) -> DispatchResult {
 		if !<PendingChange<T>>::exists() {
 			sp_std::if_std! {
-				println!("Schedule change next authorities={:?}",next_authorities);
+				println!("bb Schedule change next authorities={:?}",next_authorities);
 			}
 			let scheduled_at = <frame_system::Pallet<T>>::block_number();
 

@@ -94,6 +94,9 @@ impl<T: Config> Pallet<T> {
 	/// Retrieve authority identifiers of the current and next authority set
 	/// sorted and deduplicated.
 	pub fn authorities() -> Vec<AuthorityId> {
+		sp_std::if_std! {
+			println!("bb authority discovery called");
+		}
 		let mut keys = Keys::<T>::get();
 		let next = NextKeys::<T>::get();
 
@@ -146,7 +149,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			let keys = validators.map(|x| x.1).collect::<Vec<_>>();
 			sp_std::if_std! {
 				let mut i : u32 = 0;
-				println!("keys");
+				println!("bb keys");
 				for id in keys.iter() {
 					println!("ck{:?}={:?}",i,id);
 					i=i+1;
@@ -155,7 +158,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			let next_keys = queued_validators.map(|x| x.1).collect::<Vec<_>>();			
 			sp_std::if_std! {				
 				let mut i : u32 = 0;
-				println!("nk");
+				println!("bb new keys");
 				for id in next_keys.iter() {
 					println!("nk{:?}={:?}",i,id);
 					i=i+1;
@@ -165,7 +168,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			NextKeys::<T>::put(next_keys);
 		}else{
 			sp_std::if_std! {
-				println!("changed=false");
+				println!("bb changed ad=false");
 			}
 		}
 	}

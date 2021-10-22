@@ -125,7 +125,9 @@ pub mod pallet {
 impl<T: Config> Pallet<T> {
 	fn change_authorities(new: Vec<T::AuthorityId>) {
 		<Authorities<T>>::put(&new);
-
+		sp_std::if_std! {
+			println!("bb aura authority changed");
+		}
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(
 			AURA_ENGINE_ID,
 			ConsensusLog::AuthoritiesChange(new).encode()
@@ -183,8 +185,8 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
 			let last_authorities = Self::authorities();
 			sp_std::if_std! {
-				println!("na {:?}",next_authorities);
-				println!("la {:?}",last_authorities);
+				println!("bb na {:?}",next_authorities);
+				println!("bb la {:?}",last_authorities);
 				// let mut i : u32 = 0;
 				// println!("na");
 				// for id in next_authorities {
@@ -199,13 +201,13 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 			}
 			if next_authorities != last_authorities {
 				sp_std::if_std! {
-					println!("authority changed");
+					println!("bb authority changed");
 				}
 				Self::change_authorities(next_authorities);
 			}
 		}else{
 			sp_std::if_std! {
-				println!("changed=false");
+				println!("bb changed=false");
 			}
 		}
 	}
