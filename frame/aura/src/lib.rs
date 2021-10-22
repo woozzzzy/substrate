@@ -118,6 +118,7 @@ pub mod pallet {
 	#[pallet::genesis_build]
 	impl<T: Config> GenesisBuild<T> for GenesisConfig<T> {
 		fn build(&self) {
+			sp_runtime::print("in genesis_build (print)");
 			Pallet::<T>::initialize_authorities(&self.authorities);
 		}
 	}
@@ -125,6 +126,7 @@ pub mod pallet {
 
 impl<T: Config> Pallet<T> {
 	fn change_authorities(new: Vec<T::AuthorityId>) {
+		sp_runtime::print("in change_authorities (print)");
 		<Authorities<T>>::put(&new);
 		sp_std::if_std! {
 			println!("bb aura authority changed");
@@ -138,6 +140,7 @@ impl<T: Config> Pallet<T> {
 	}
 
 	fn initialize_authorities(authorities: &[T::AuthorityId]) {
+		sp_runtime::print("in initialize_authorities (print)");
 		sp_std::if_std! {
 			println!("bb aura init authorities={:?}",authorities);
 		}
@@ -163,6 +166,7 @@ impl<T: Config> Pallet<T> {
 
 	/// Determine the Aura slot-duration based on the Timestamp module configuration.
 	pub fn slot_duration() -> T::Moment {
+		sp_runtime::print("in slot_duration (print)");
 		// we double the minimum block-period so each author can always propose within
 		// the majority of its slot.
 		<T as pallet_timestamp::Config>::MinimumPeriod::get().saturating_mul(2u32.into())
@@ -188,6 +192,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		where I: Iterator<Item=(&'a T::AccountId, T::AuthorityId)>
 	{
 
+		sp_runtime::print("in on_new_session (print)");
 		log::info!("called by on_new_session {:?}", changed);
 		// instant changes
 		if changed {
