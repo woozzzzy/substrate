@@ -535,6 +535,11 @@ pub fn import_queue<'a, P, Block, I, C, S, CAW, CIDP>(
 {
 	initialize_authorities_cache(&*client)?;
 
+
+	log::info!("in aura initialize_authorities (log)");
+	sp_std::if_std! {			
+		println!("in aura initialize_authorities (println)");		
+	}
 	let verifier = AuraVerifier::<_, P, _, _>::new(
 		client,
 		create_inherent_data_providers,
