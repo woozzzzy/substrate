@@ -38,6 +38,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use sp_std::prelude::*;
+use log;
 use codec::{Encode, Decode};
 use frame_support::{
 	Parameter, traits::{Get, FindAuthor, OneSessionHandler, OnTimestampSet}, ConsensusEngineId,
@@ -128,6 +129,7 @@ impl<T: Config> Pallet<T> {
 		sp_std::if_std! {
 			println!("bb aura authority changed");
 		}
+		log::info!("called by ca {:?}", new);
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(
 			AURA_ENGINE_ID,
 			ConsensusLog::AuthoritiesChange(new).encode()
@@ -139,6 +141,7 @@ impl<T: Config> Pallet<T> {
 		sp_std::if_std! {
 			println!("bb aura init authorities={:?}",authorities);
 		}
+		log::info!("called by ia {:?}", authorities);
 		if !authorities.is_empty() {
 			assert!(<Authorities<T>>::get().is_empty(), "Authorities are already initialized!");
 			<Authorities<T>>::put(authorities);

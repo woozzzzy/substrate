@@ -4771,6 +4771,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "lazy_static",
+ "log",
  "pallet-session",
  "pallet-timestamp",
  "parity-scale-codec",
