@@ -143,7 +143,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	{
 		// Remember who the authorities are for the new and next session.
 		if changed {
-			let keys = validators.map(|x| x.1);
+			let keys = validators.map(|x| x.1).collect::<Vec<_>>();
 			sp_std::if_std! {
 				let mut i : u32 = 0;
 				println!("keys");
@@ -152,7 +152,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 					i=i+1;
 				}
 			}
-			let next_keys = queued_validators.clone().map(|x| x.1);			
+			let next_keys = queued_validators.map(|x| x.1).collect::<Vec<_>>();			
 			sp_std::if_std! {				
 				let mut i : u32 = 0;
 				println!("nk");
@@ -161,8 +161,8 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 					i=i+1;
 				}
 			}
-			Keys::<T>::put(keys.collect::<Vec<_>>());
-			NextKeys::<T>::put(next_keys.collect::<Vec<_>>());
+			Keys::<T>::put(keys);
+			NextKeys::<T>::put(next_keys);
 		}else{
 			sp_std::if_std! {
 				println!("changed=false");
