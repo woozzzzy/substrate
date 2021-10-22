@@ -355,7 +355,7 @@ impl<T: Config> Module<T> {
 	fn set_grandpa_authorities(authorities: &AuthorityList) {
 		storage::unhashed::put(
 			sp_std::if_std! {
-				println!("in set grandpa authorities")
+				println!("in set grandpa authorities");
 			}
 			GRANDPA_AUTHORITIES_KEY,
 			&VersionedAuthorityList::from(authorities),
