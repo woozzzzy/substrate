@@ -567,7 +567,7 @@ where
 	client
 		.cache()
 		.and_then(|cache| cache
-			.get_at(&well_known_cache_keys::AUTHORITIES, at)
+			.get_at(&sp_blockchain::well_known_cache_keys::AUTHORITIES, at)
 			.unwrap_or(None)
 			.and_then(|(_, _, v)| Decode::decode(&mut &v[..]).ok())
 		)
