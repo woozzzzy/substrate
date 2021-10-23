@@ -85,18 +85,18 @@ where
 
 		let pre_hash = header.hash();
 
-		sp_std::if_std! {
-			println!("slot = {:?}",slot);			
-			// println!("authorities");
-			// let mut i : u32 = 0;
-			// for id in authorities {
-			// 	println!("Authority{:?}={:?}",i,id.as_ref());
-			// 	i=i+1;
-			// }
-			println!("header = {:?}",&hash);
-			// println!("pre-hash = {:?}",pre_hash);
-			println!("expected_author = {:?}",expected_author.as_ref());
-		}
+		// sp_std::if_std! {
+		// 	println!("slot = {:?}",slot);			
+		// 	// println!("authorities");
+		// 	// let mut i : u32 = 0;
+		// 	// for id in authorities {
+		// 	// 	println!("Authority{:?}={:?}",i,id.as_ref());
+		// 	// 	i=i+1;
+		// 	// }
+		// 	println!("header = {:?}",&hash);
+		// 	// println!("pre-hash = {:?}",pre_hash);
+		// 	println!("expected_author = {:?}",expected_author.as_ref());
+		// }
 
 		if P::verify(&sig, pre_hash.as_ref(), expected_author) {
 			if check_for_equivocation.check_for_equivocation() {
