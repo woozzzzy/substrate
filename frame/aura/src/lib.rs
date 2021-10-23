@@ -130,8 +130,8 @@ impl<T: Config> Pallet<T> {
 		<Authorities<T>>::put(&new);
 		sp_std::if_std! {
 			println!("bb aura authority changed");
+			log::info!("called by ca {:?}", new);
 		}
-		log::info!("called by ca {:?}", new);
 		let log: DigestItem<T::Hash> = DigestItem::Consensus(
 			AURA_ENGINE_ID,
 			ConsensusLog::AuthoritiesChange(new).encode()
@@ -143,8 +143,8 @@ impl<T: Config> Pallet<T> {
 		sp_runtime::print("in initialize_authorities (print)");
 		sp_std::if_std! {
 			println!("bb aura init authorities={:?}",authorities);
+			log::info!("called by ia {:?}", authorities);
 		}
-		log::info!("called by ia {:?}", authorities);
 		if !authorities.is_empty() {
 			assert!(<Authorities<T>>::get().is_empty(), "Authorities are already initialized!");
 			<Authorities<T>>::put(authorities);
@@ -184,7 +184,9 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		where I: Iterator<Item=(&'a T::AccountId, T::AuthorityId)>
 	{
 		let authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
-		log::info!("called by on_genesis_session {:?}", &authorities);
+		sp_std::if_std!{
+			log::info!("called by on_genesis_session {:?}", &authorities);
+		}
 		Self::initialize_authorities(&authorities);
 	}
 
@@ -193,7 +195,9 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 	{
 
 		sp_runtime::print("in on_new_session (print)");
-		log::info!("called by on_new_session {:?}", changed);
+		sp_std::if_std!{
+			log::info!("called by on_new_session {:?}", changed);
+		}
 		// instant changes
 		if changed {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
