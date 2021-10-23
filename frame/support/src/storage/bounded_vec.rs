@@ -37,7 +37,7 @@ use sp_std::{convert::TryFrom, fmt, marker::PhantomData, prelude::*};
 ///
 /// As the name suggests, the length of the queue is always bounded. All internal operations ensure
 /// this bound is respected.
-#[derive(Encode, Debug)]
+#[derive(Encode)]
 pub struct BoundedVec<T, S>(Vec<T>, PhantomData<S>);
 
 /// A bounded slice.
@@ -199,7 +199,7 @@ impl<T, S> Default for BoundedVec<T, S> {
 	}
 }
 
-#[cfg(feature = "std")]
+// #[cfg(feature = "std")]
 impl<T, S> fmt::Debug for BoundedVec<T, S>
 where
 	T: fmt::Debug,
