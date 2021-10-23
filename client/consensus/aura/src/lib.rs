@@ -540,8 +540,9 @@ fn authorities<A, B, C>(client: &C, at: &BlockId<B>) -> Result<Vec<A>, Consensus
 		.or_else(|| AuraApi::authorities(&*client.runtime_api(), at).ok())
 		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 	sp_std::if_std!{
-		log::info("Authorities are: {:?}",auth);
+		log::info!("Authorities are: {:?}",auth);
 	}
+	auth
 }
 
 #[cfg(test)]
