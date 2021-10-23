@@ -29,7 +29,7 @@ use sp_std::{fmt::Debug, iter::once, ops::Add, prelude::*};
 /// than 32-bytes then it will be truncated when encoding.
 ///
 /// Can also be `None`.
-#[derive(Clone, Eq, PartialEq, Debug, RuntimeDebug, MaxEncodedLen)]
+#[derive(Clone, Eq, PartialEq, Debug, MaxEncodedLen)]
 pub enum Data {
 	/// No data here.
 	None,
