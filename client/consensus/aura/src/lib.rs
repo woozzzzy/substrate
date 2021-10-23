@@ -547,13 +547,13 @@ where
 	B: BlockT,
 	C: ProvideRuntimeApi<B> + BlockOf + ProvideCache<B>,
 	C::Api: AuraApi<B, A>,
-// {
-// 	client
-// 		.runtime_api()
-// 		.authorities(at)
-// 		.ok()
-// 		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
-// }
+{
+	client
+		.runtime_api()
+		.authorities(at)
+		.ok()
+		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
+}
 // {
 // 	let auth=AuraApi::authorities(&*client.runtime_api(), at).ok()
 // 		// .or_else(|| AuraApi::authorities(&*client.runtime_api(), at).ok())
@@ -563,17 +563,17 @@ where
 // 	}
 // 	auth
 // }
-{
-	client
-		.cache()
-		.and_then(|cache| cache
-			.get_at(&sp_blockchain::well_known_cache_keys::AUTHORITIES, at)
-			.unwrap_or(None)
-			.and_then(|(_, _, v)| Decode::decode(&mut &v[..]).ok())
-		)
-		.or_else(|| AuraApi::authorities(&*client.runtime_api(), at).ok())
-		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
-}
+// {
+// 	client
+// 		.cache()
+// 		.and_then(|cache| cache
+// 			.get_at(&sp_blockchain::well_known_cache_keys::AUTHORITIES, at)
+// 			.unwrap_or(None)
+// 			.and_then(|(_, _, v)| Decode::decode(&mut &v[..]).ok())
+// 		)
+// 		.or_else(|| AuraApi::authorities(&*client.runtime_api(), at).ok())
+// 		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
+// }
 
 #[cfg(test)]
 mod tests {
