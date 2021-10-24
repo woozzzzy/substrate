@@ -328,6 +328,10 @@ where
 							info!("hash = {:?}, keys = {:?}",hash,keys_);
 						}
 					}
+				}else{
+					sp_std::if_std!{				
+						info!("Should be = {}",format!("{:?}",hash));
+					}
 				}
 				Ok((block, maybe_keys))
 			},
