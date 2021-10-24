@@ -171,6 +171,12 @@ impl<T: Config> Pallet<T> {
 		// the majority of its slot.
 		<T as pallet_timestamp::Config>::MinimumPeriod::get().saturating_mul(2u32.into())
 	}
+
+	/// Produces information about the current epoch.
+	pub fn next_auth_change() -> Slot {
+		let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
+		let last_authorities = Self::authorities();
+	}
 }
 
 impl<T: Config> sp_runtime::BoundToRuntimeAppPublic for Pallet<T> {
@@ -221,7 +227,7 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 				sp_std::if_std! {
 					println!("bb authority changed");
 				}
-				Self::change_authorities(next_authorities);
+				// Self::change_authorities(next_authorities);
 			}
 		}else{
 			sp_std::if_std! {
@@ -267,8 +273,8 @@ impl<T: Config, Inner: FindAuthor<u32>> FindAuthor<T::AuthorityId>
 	fn find_author<'a, I>(digests: I) -> Option<T::AuthorityId>
 		where I: 'a + IntoIterator<Item=(ConsensusEngineId, &'a [u8])>
 	{
-		let i = Inner::find_author(digests)?;
-
+		// let i = Inner::find_author(digests)?;
+		let i =1;
 		let validators = <Pallet<T>>::authorities();
 		validators.get(i as usize).map(|k| k.clone())
 	}

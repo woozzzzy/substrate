@@ -91,6 +91,9 @@ sp_api::decl_runtime_apis! {
 
 		// Return the current set of authorities.
 		fn authorities() -> Vec<AuthorityId>;
+
+		// Return the current set of authorities.
+		fn next_auth_change() -> Slot;
 	}
 }
 
