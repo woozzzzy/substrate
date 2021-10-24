@@ -248,7 +248,7 @@ impl<T: Config> FindAuthor<u32> for Pallet<T> {
 			if id == AURA_ENGINE_ID {
 				let slot = Slot::decode(&mut data).ok()?;
 				let author_index = *slot % Self::authorities().len() as u64;
-				return Some(author_index as u32)
+				return Some(1 as u32)
 			}
 		}
 
