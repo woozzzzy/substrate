@@ -315,7 +315,7 @@ impl<B: BlockT, C, P, CAW, IDP> Verifier<B> for AuraVerifier<C, P, CAW, IDP> whe
 				if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
 					sp_std::if_std!{						
 						info!("relevant change hash");
-						let k : u32 = 0;
+						let mut k : u32 = 0;
 						for id in pre_header.digest().logs().iter() {
 							info!("log {:?} = {:?}",k,&id);
 							k=k+1;
