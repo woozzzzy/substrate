@@ -293,6 +293,7 @@ where
 					"pre_header" => ?pre_header,
 				);
 
+				let pr = pre_header.clone();
 				// Look for an authorities-change log.
 				let maybe_keys = pre_header
 					.digest()
@@ -314,13 +315,20 @@ where
 				block.fork_choice = Some(ForkChoiceStrategy::LongestChain);
 				block.post_hash = Some(hash);
 
-				
-				if let Some(keys_)=maybe_keys.clone(){
-					sp_std::if_std!{
-						info!("hash = {:?}, keys = {:?}",hash,keys_);
+
+				if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
+					sp_std::if_std!{						
+						info!("relevant change hash");
+						let mut k : u32 = 0;
+						for id in pr.digest().logs().iter() {
+							info!("log {:?} = {:?}",k,&id);
+							k=k+1;
+						}
+						if let Some(keys_)=maybe_keys.clone(){
+							info!("hash = {:?}, keys = {:?}",hash,keys_);
+						}
 					}
 				}
-
 				Ok((block, maybe_keys))
 			},
 			CheckedHeader::Deferred(a, b) => {
