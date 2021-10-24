@@ -312,9 +312,17 @@ impl<B: BlockT, C, P, CAW, IDP> Verifier<B> for AuraVerifier<C, P, CAW, IDP> whe
 				import_block.fork_choice = Some(ForkChoiceStrategy::LongestChain);
 				import_block.post_hash = Some(hash);
 
-				if let Some(keys_)=maybe_keys.clone(){
-					sp_std::if_std!{
-						info!("hash = {:?}, keys = {:?}",hash,keys_);
+				if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
+					sp_std::if_std!{						
+						info!("relevant change hash");
+						let k : u32 = 0;
+						for id in pre_header.digest().logs().iter() {
+							info!("log {:?} = {:?}",k,&id);
+							k=k+1;
+						}
+						if let Some(keys_)=maybe_keys.clone(){
+							info!("hash = {:?}, keys = {:?}",hash,keys_);
+						}
 					}
 				}
 
