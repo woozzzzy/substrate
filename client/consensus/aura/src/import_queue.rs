@@ -312,6 +312,12 @@ impl<B: BlockT, C, P, CAW, IDP> Verifier<B> for AuraVerifier<C, P, CAW, IDP> whe
 				import_block.fork_choice = Some(ForkChoiceStrategy::LongestChain);
 				import_block.post_hash = Some(hash);
 
+				if let Some(keys_)=maybe_keys{
+					sp_std::if_std!{
+						info!("hash = {:?}, keys = {:?}",hash,keys_);
+					}
+				}
+
 				Ok((import_block, maybe_keys))
 			}
 			CheckedHeader::Deferred(a, b) => {
