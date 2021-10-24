@@ -542,7 +542,7 @@ fn authorities<A, B, C>(client: &C, at: &BlockId<B>) -> Result<Vec<A>, Consensus
 	// sp_std::if_std!{
 	// 	log::info!("Block: {:?} Authorities are: {:?}",at,auth);
 	// }
-	if BlockId::Hash("0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7")==auth.ok()){
+	if BlockId::Hash("0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7")==auth.ok(){
 		log::info!("reached the end");
 		panic!("Reached the end");
 	}
