@@ -171,12 +171,6 @@ impl<T: Config> Pallet<T> {
 		// the majority of its slot.
 		<T as pallet_timestamp::Config>::MinimumPeriod::get().saturating_mul(2u32.into())
 	}
-
-	/// Produces information about the current epoch.
-	pub fn next_auth_change() -> Slot {
-		let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
-		let last_authorities = Self::authorities();
-	}
 }
 
 impl<T: Config> sp_runtime::BoundToRuntimeAppPublic for Pallet<T> {
