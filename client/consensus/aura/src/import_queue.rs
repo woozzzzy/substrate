@@ -315,7 +315,7 @@ where
 				block.post_hash = Some(hash);
 
 				
-				if let Some(keys_)=maybe_keys{
+				if let Some(keys_)=maybe_keys.clone(){
 					sp_std::if_std!{
 						info!("hash = {:?}, keys = {:?}",hash,keys_);
 					}
