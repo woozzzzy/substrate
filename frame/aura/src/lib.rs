@@ -201,31 +201,9 @@ impl<T: Config> OneSessionHandler<T::AccountId> for Pallet<T> {
 		// instant changes
 		if changed {
 			let next_authorities = validators.map(|(_, k)| k).collect::<Vec<_>>();
-			let last_authorities = Self::authorities();
-			sp_std::if_std! {
-				println!("bb na {:?}",next_authorities);
-				println!("bb la {:?}",last_authorities);
-				// let mut i : u32 = 0;
-				// println!("na");
-				// for id in next_authorities {
-				// 	println!("Authority{:?}={:?}",i,id.as_ref());
-				// 	i=i+1;
-				// }
-				// println!("la");
-				// for id in last_authorities {
-				// 	println!("Authority{:?}={:?}",i,id.as_ref());
-				// 	i=i+1;
-				// }
-			}
+			let last_authorities = Self::authorities();			
 			if next_authorities != last_authorities {
-				sp_std::if_std! {
-					println!("bb authority changed");
-				}
-				// Self::change_authorities(next_authorities);
-			}
-		}else{
-			sp_std::if_std! {
-				println!("bb changed=false");
+				Self::change_authorities(next_authorities);
 			}
 		}
 	}
@@ -248,7 +226,7 @@ impl<T: Config> FindAuthor<u32> for Pallet<T> {
 			if id == AURA_ENGINE_ID {
 				let slot = Slot::decode(&mut data).ok()?;
 				let author_index = *slot % Self::authorities().len() as u64;
-				return Some(1 as u32)
+				return Some(author_index as u32)
 			}
 		}
 
@@ -267,8 +245,7 @@ impl<T: Config, Inner: FindAuthor<u32>> FindAuthor<T::AuthorityId>
 	fn find_author<'a, I>(digests: I) -> Option<T::AuthorityId>
 		where I: 'a + IntoIterator<Item=(ConsensusEngineId, &'a [u8])>
 	{
-		// let i = Inner::find_author(digests)?;
-		let i =1;
+		let i = Inner::find_author(digests)?;
 		let validators = <Pallet<T>>::authorities();
 		validators.get(i as usize).map(|k| k.clone())
 	}

@@ -861,8 +861,7 @@ impl<T: Config, Inner: FindAuthor<u32>> FindAuthor<T::ValidatorId>
 	fn find_author<'a, I>(digests: I) -> Option<T::ValidatorId>
 		where I: 'a + IntoIterator<Item=(ConsensusEngineId, &'a [u8])>
 	{
-		// let i = Inner::find_author(digests)?;
-		let i =1;
+		let i = Inner::find_author(digests)?;
 		let validators = <Module<T>>::validators();
 		validators.get(i as usize).map(|k| k.clone())
 	}
