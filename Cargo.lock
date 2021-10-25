@@ -7766,6 +7766,7 @@ dependencies = [
  "sp-keyring",
  "sp-keystore",
  "sp-runtime",
+ "sp-std",
  "sp-tracing",
  "substrate-prometheus-endpoint",
  "substrate-test-runtime-client",
