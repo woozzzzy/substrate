@@ -551,6 +551,11 @@ where
 			Err(e) => return Err(ConsensusError::ClientImport(e.to_string())),
 		}
 
+		sp_std::if_std! {
+			println!("After inchain");
+			println!("Block {:?} : {:?}",number,hash);
+		}
+
 		if block.with_state() {
 			return self.import_state(block, new_cache).await
 		}
