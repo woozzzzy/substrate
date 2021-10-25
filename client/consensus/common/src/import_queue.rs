@@ -283,7 +283,9 @@ pub(crate) async fn import_single_block_metered<
 	} else if block.allow_missing_state {
 		import_block.state_action = StateAction::ExecuteIfPossible;
 	}
-
+	sp_std::if_std!{
+		log::info("before verify");
+	}
 	let (import_block, maybe_keys) = verifier.verify(import_block).await.map_err(|msg| {
 		if let Some(ref peer) = peer {
 			trace!(target: "sync", "Verifying {}({}) from {} failed: {}", number, hash, peer, msg);
@@ -296,6 +298,9 @@ pub(crate) async fn import_single_block_metered<
 		BlockImportError::VerificationFailed(peer.clone(), msg)
 	})?;
 
+	sp_std::if_std!{
+		log::info("after verify");
+	}
 	if let Some(metrics) = metrics.as_ref() {
 		metrics.report_verification(true, started.elapsed());
 	}
