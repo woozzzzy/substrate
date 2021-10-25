@@ -448,7 +448,7 @@ impl<BE, Block: BlockT, Client, SC> BlockImport<Block>
 		match self.inner.status(BlockId::Hash(hash)) {
 			Ok(BlockStatus::InChain) => {
 				sp_std::if_std! {
-					println!("within inchain");
+					println!("Within inchain");
 					println!("Block {:?} : {:?}",number,hash);
 				}
 				return Ok(ImportResult::AlreadyInChain)
@@ -461,7 +461,6 @@ impl<BE, Block: BlockT, Client, SC> BlockImport<Block>
 			println!("After inchain");
 			println!("Block {:?} : {:?}",number,hash);
 		}
-
 		// on initial sync we will restrict logging under info to avoid spam.
 		let initial_sync = block.origin == BlockOrigin::NetworkInitialSync;
 

@@ -7583,6 +7583,7 @@ dependencies = [
  "sp-keystore",
  "sp-runtime",
  "sp-state-machine",
+ "sp-std",
  "sp-tracing",
  "sp-utils",
  "substrate-prometheus-endpoint",
