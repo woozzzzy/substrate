@@ -628,6 +628,12 @@ impl<B: BlockT> Protocol<B> {
 			block_response.blocks.len(),
 			blocks_range(),
 		);
+		info!(target: "qsync", "BlockResponse {} from {} with {} blocks {}",
+			block_response.id,
+			peer_id,
+			block_response.blocks.len(),
+			blocks_range(),
+		);
 
 		if request.fields == message::BlockAttributes::JUSTIFICATION {
 			match self.sync.on_block_justification(peer_id, block_response) {
@@ -640,6 +646,7 @@ impl<B: BlockT> Protocol<B> {
 					CustomMessageOutcome::None
 				}
 			}
+			info!("Justification import");
 		} else {
 			match self.sync.on_block_data(&peer_id, Some(request), block_response) {
 				Ok(sync::OnBlockData::Import(origin, blocks)) =>
@@ -653,6 +660,7 @@ impl<B: BlockT> Protocol<B> {
 					CustomMessageOutcome::None
 				}
 			}
+			info!("Block import");
 		}
 	}
 

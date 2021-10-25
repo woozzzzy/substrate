@@ -446,9 +446,20 @@ impl<BE, Block: BlockT, Client, SC> BlockImport<Block>
 		// early exit if block already in chain, otherwise the check for
 		// authority changes will error when trying to re-import a change block
 		match self.inner.status(BlockId::Hash(hash)) {
-			Ok(BlockStatus::InChain) => return Ok(ImportResult::AlreadyInChain),
+			Ok(BlockStatus::InChain) => {
+				sp_std::if_std! {
+					println!("within inchain");
+					println!("Block {:?} : {:?}",number,hash);
+				}
+				return Ok(ImportResult::AlreadyInChain)
+			},
 			Ok(BlockStatus::Unknown) => {},
 			Err(e) => return Err(ConsensusError::ClientImport(e.to_string())),
+		}
+ 
+		sp_std::if_std! {
+			println!("After inchain");
+			println!("Block {:?} : {:?}",number,hash);
 		}
 
 		// on initial sync we will restrict logging under info to avoid spam.
