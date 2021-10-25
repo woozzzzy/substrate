@@ -556,6 +556,11 @@ where
 			println!("Block {:?} : {:?}",number,hash);
 		}
 
+		sp_std::if_std! {
+			println!("After inchain");
+			println!("Block {:?} : {:?}",number,hash);
+		}
+
 		if block.with_state() {
 			return self.import_state(block, new_cache).await
 		}

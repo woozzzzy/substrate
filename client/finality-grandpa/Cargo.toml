@@ -44,6 +44,7 @@ sp-finality-grandpa = { version = "4.0.0-dev", path = "../../primitives/finality
 prometheus-endpoint = { package = "substrate-prometheus-endpoint", path = "../../utils/prometheus", version = "0.9.0" }
 sc-block-builder = { version = "0.10.0-dev", path = "../block-builder" }
 finality-grandpa = { version = "0.14.1", features = ["derive-codec"] }
+sp-std = { version = "4.0.0-dev", default-features = false, path = "../../primitives/std" }
 async-trait = "0.1.50"
 
 [dev-dependencies]
