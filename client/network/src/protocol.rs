@@ -636,6 +636,7 @@ impl<B: BlockT> Protocol<B> {
 		);
 
 		if request.fields == message::BlockAttributes::JUSTIFICATION {
+			info!("Justification import");
 			match self.sync.on_block_justification(peer_id, block_response) {
 				Ok(sync::OnBlockJustification::Nothing) => CustomMessageOutcome::None,
 				Ok(sync::OnBlockJustification::Import { peer, hash, number, justifications }) =>
@@ -646,8 +647,8 @@ impl<B: BlockT> Protocol<B> {
 					CustomMessageOutcome::None
 				}
 			}
-			info!("Justification import");
 		} else {
+			info!("Block import");
 			match self.sync.on_block_data(&peer_id, Some(request), block_response) {
 				Ok(sync::OnBlockData::Import(origin, blocks)) =>
 					CustomMessageOutcome::BlockImport(origin, blocks),
@@ -660,7 +661,6 @@ impl<B: BlockT> Protocol<B> {
 					CustomMessageOutcome::None
 				}
 			}
-			info!("Block import");
 		}
 	}
 
