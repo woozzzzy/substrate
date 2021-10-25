@@ -284,7 +284,7 @@ pub(crate) async fn import_single_block_metered<
 		import_block.state_action = StateAction::ExecuteIfPossible;
 	}
 	sp_std::if_std!{
-		log::info("before verify");
+		log::info!("before verify");
 	}
 	let (import_block, maybe_keys) = verifier.verify(import_block).await.map_err(|msg| {
 		if let Some(ref peer) = peer {
@@ -299,7 +299,7 @@ pub(crate) async fn import_single_block_metered<
 	})?;
 
 	sp_std::if_std!{
-		log::info("after verify");
+		log::info!("after verify");
 	}
 	if let Some(metrics) = metrics.as_ref() {
 		metrics.report_verification(true, started.elapsed());
