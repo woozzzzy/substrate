@@ -541,10 +541,19 @@ where
 			Ok(BlockStatus::InChain) => {
 				// Strip justifications when re-importing an existing block.
 				let _justifications = block.justifications.take();
+				sp_std::if_std! {
+					println!("within inchain");
+					println!("Block {:?} : {:?}",number,hash);
+				}
 				return (&*self.inner).import_block(block, new_cache).await
 			},
 			Ok(BlockStatus::Unknown) => {},
 			Err(e) => return Err(ConsensusError::ClientImport(e.to_string())),
+		}
+ 
+		sp_std::if_std! {
+			println!("After inchain");
+			println!("Block {:?} : {:?}",number,hash);
 		}
 
 		if block.with_state() {

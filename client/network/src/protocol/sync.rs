@@ -1237,6 +1237,13 @@ impl<B: BlockT> ChainSync<B> {
 				response.entries.len(),
 				response.proof.len(),
 			);
+			info!(
+				target: "qsync",
+				"Importing state data from {} with {} keys, {} proof nodes.",
+				who,
+				response.entries.len(),
+				response.proof.len(),
+			);
 			sync.import(response)
 		} else if let Some(sync) = &mut self.warp_sync {
 			debug!(
@@ -1246,9 +1253,17 @@ impl<B: BlockT> ChainSync<B> {
 				response.entries.len(),
 				response.proof.len(),
 			);
+			info!(
+				target: "qsync",
+				"Importing state data from {} with {} keys, {} proof nodes.",
+				who,
+				response.entries.len(),
+				response.proof.len(),
+			);
 			sync.import_state(response)
 		} else {
 			debug!(target: "sync", "Ignored obsolete state response from {}", who);
+			info!(target: "qsync", "Ignored obsolete state response from {}", who);
 			return Err(BadPeer(who.clone(), rep::NOT_REQUESTED))
 		};
 
