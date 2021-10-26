@@ -7749,6 +7749,7 @@ dependencies = [
  "sp-core",
  "sp-keyring",
  "sp-runtime",
+ "sp-std",
  "sp-test-primitives",
  "sp-tracing",
  "sp-utils",

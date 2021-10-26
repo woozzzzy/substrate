@@ -239,6 +239,10 @@ pub(crate) async fn import_single_block_metered<B: BlockT, V: Verifier<B>, Trans
 	}
 
 	let started = wasm_timer::Instant::now();
+
+	sp_std::if_std!{
+		log::info!("before verify");
+	}
 	let (mut import_block, maybe_keys) = verifier.verify(
 		block_origin,
 		header,
@@ -256,6 +260,9 @@ pub(crate) async fn import_single_block_metered<B: BlockT, V: Verifier<B>, Trans
 		BlockImportError::VerificationFailed(peer.clone(), msg)
 	})?;
 
+	sp_std::if_std!{
+		log::info!("after verify");
+	}
 	if let Some(metrics) = metrics.as_ref() {
 		metrics.report_verification(true, started.elapsed());
 	}
