@@ -534,7 +534,7 @@ fn authorities<A, B, C>(client: &C, at: &BlockId<B>) -> Result<Vec<A>, Consensus
 		.cache()
 		.and_then(|cache| {
 				sp_std::if_std! {
-					log.info!("In cache: BlockID {:?}",at);
+					log::info!("In cache: BlockID {:?}",at);
 				}
 				cache
 				.get_at(&well_known_cache_keys::AUTHORITIES, at)
@@ -544,7 +544,7 @@ fn authorities<A, B, C>(client: &C, at: &BlockId<B>) -> Result<Vec<A>, Consensus
 		)
 		.or_else(|| {
 				sp_std::if_std! {
-					log.info!("In AuraAPI: BlockID {:?}",at);
+					log::info!("In AuraAPI: BlockID {:?}",at);
 				}
 				AuraApi::authorities(&*client.runtime_api(), at).ok()
 			}
