@@ -462,6 +462,11 @@ impl<Block: BlockT, C, I, P> BlockImport<Block> for AuraBlockImport<Block, C, I,
 			);
 		}
 
+
+		sp_std::if_std! {
+			println!("In aura import block");
+			println!("Block {:?} : {:?}",slot,hash);
+		}
 		self.inner.import_block(block, new_cache).await.map_err(Into::into)
 	}
 }
