@@ -561,6 +561,7 @@ where
 	sp_std::if_std!{
 		log::info!("Block: {:?} Authorities are: {:?}",at,auth);
 	}
+	log::info!("Block: {:?} Authorities are: {:?}",at,auth);
 	auth
 }
 // {
