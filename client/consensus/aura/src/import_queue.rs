@@ -229,7 +229,7 @@ where
 				log::info!("------------------------");
 				log::info!("Block: {:?} Authorities are: {:?}",parent_hash,authorities_);
 				if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
-					let next_authorities = authorities(self.client.as_ref(), &BlockId::Hash(hash))
+					let next_authorities = authorities(self.client.clone().as_ref(), &BlockId::Hash(hash))
 					.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 					log::info!("Block: {:?} Authorities are: {:?}",hash,next_authorities);
 				}
