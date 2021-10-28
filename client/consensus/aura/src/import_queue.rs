@@ -223,7 +223,7 @@ where
 	) -> Result<(BlockImportParams<B, ()>, Option<Vec<(CacheKeyId, Vec<u8>)>>), String> {
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
-		let authorities = authorities(self.client.as_ref(), &BlockId::Hash(parent_hash))
+		let authorities = authorities(self.client.as_ref(), &BlockId::Hash(block.header.hash()))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 
 		let create_inherent_data_providers = self
