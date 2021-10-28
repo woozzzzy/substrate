@@ -223,7 +223,7 @@ where
 	) -> Result<(BlockImportParams<B, ()>, Option<Vec<(CacheKeyId, Vec<u8>)>>), String> {
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
-		let authorities = authorities(self.client.as_ref(), &BlockId::Hash(parent_hash))
+		let authorities_ = authorities(self.client.as_ref(), &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 			sp_std::if_std!{
 				log::info!("------------------------");
@@ -256,7 +256,7 @@ where
 			slot_now + 1,
 			block.header,
 			hash,
-			&authorities[..],
+			&authorities_[..],
 			self.check_for_equivocation,
 		)
 		.map_err(|e| e.to_string())?;
