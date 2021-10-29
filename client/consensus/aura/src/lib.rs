@@ -532,20 +532,22 @@ fn authorities<A, B, C>(client: &C, at: &BlockId<B>) -> Result<Vec<A>, Consensus
 {
 	let auth=client
 		.cache()
-		.and_then(|cache| 
-			sp_std::if_std! {
-				log::info!("In cache");
+		.and_then(|cache| {
+				sp_std::if_std! {
+					log::info!("In cache: BlockID {:?}",at);
+				}
+				cache
+				.get_at(&well_known_cache_keys::AUTHORITIES, at)
+				.unwrap_or(None)
+				.and_then(|(_, _, v)| Decode::decode(&mut &v[..]).ok())
 			}
-			cache
-			.get_at(&well_known_cache_keys::AUTHORITIES, at)
-			.unwrap_or(None)
-			.and_then(|(_, _, v)| Decode::decode(&mut &v[..]).ok())
 		)
-		.or_else(|| 
-			sp_std::if_std! {
-				log::info!("In AuraApi::authorities");
+		.or_else(|| {
+				sp_std::if_std! {
+					log::info!("In AuraAPI: BlockID {:?}",at);
+				}
+				AuraApi::authorities(&*client.runtime_api(), at).ok()
 			}
-			AuraApi::authorities(&*client.runtime_api(), at).ok()
 		)
 		.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 	// sp_std::if_std!{

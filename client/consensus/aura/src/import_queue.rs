@@ -300,9 +300,14 @@ impl<B: BlockT, C, P, CAW, IDP> Verifier<B> for AuraVerifier<C, P, CAW, IDP> whe
 						OpaqueDigestItemId::Consensus(&AURA_ENGINE_ID)
 					))
 					.find_map(|l| match l {
-						ConsensusLog::AuthoritiesChange(a) => Some(
-							vec![(well_known_cache_keys::AUTHORITIES, a.encode())]
-						),
+						ConsensusLog::AuthoritiesChange(a) =>{
+							sp_std::if_std!{						
+								info!("AuthoritiesChange = {:?} ",a.clone().encode());
+							}							
+							Some(
+								vec![(well_known_cache_keys::AUTHORITIES, a.encode())]
+							)				
+						},
 						_ => None,
 					});
 
@@ -462,6 +467,11 @@ impl<Block: BlockT, C, I, P> BlockImport<Block> for AuraBlockImport<Block, C, I,
 			);
 		}
 
+
+		sp_std::if_std! {
+			println!("In aura import block");
+			println!("Block {:?} : {:?}",slot,hash);
+		}
 		self.inner.import_block(block, new_cache).await.map_err(Into::into)
 	}
 }
