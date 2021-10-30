@@ -316,6 +316,9 @@ where
 						))
 					})
 					.find_map(|l| match l {
+						sp_std::if_std!{						
+							info!("AuthoritiesChange = {:?} ",a.clone().encode());
+						}
 						ConsensusLog::AuthoritiesChange(a) =>
 							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())]),
 						_ => None,
@@ -325,6 +328,21 @@ where
 				block.post_digests.push(seal);
 				block.fork_choice = Some(ForkChoiceStrategy::LongestChain);
 				block.post_hash = Some(hash);
+
+
+				if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
+					sp_std::if_std!{						
+						info!("relevant change hash 0x07e");
+						let mut k : u32 = 0;
+						for id in pr.digest().logs().iter() {
+							info!("log {:?} = {:?}",k,&id);
+							k=k+1;
+						}
+						if let Some(keys_)=maybe_keys.clone(){
+							info!("hash = {:?}, keys = {:?}",hash,keys_);
+						}
+					}
+				}
 
 
 				if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
@@ -338,10 +356,6 @@ where
 						if let Some(keys_)=maybe_keys.clone(){
 							info!("hash = {:?}, keys = {:?}",hash,keys_);
 						}
-					}
-				}else{
-					sp_std::if_std!{				
-						info!("Should be = {}",format!("{:?}",hash));
 					}
 				}
 				Ok((block, maybe_keys))
