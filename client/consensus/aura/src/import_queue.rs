@@ -303,7 +303,8 @@ where
 					.find_map(|l| match l {
 						ConsensusLog::AuthoritiesChange(a) =>{
 							sp_std::if_std!{						
-								info!("AuthoritiesChange = {:?} ",a.clone().encode());
+								info!("AuthoritiesChange = {:?} ",a.clone().encode());						
+								info!("AuthoritiesChange non-encoded = {:?} ",a.clone());
 							}
 							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
 						},
