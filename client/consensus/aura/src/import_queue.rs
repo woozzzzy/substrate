@@ -314,7 +314,7 @@ where
 			}
 		}
 
-		let mb_keys = block.header.clone()
+		let new_auth = block.header.clone()
 			.digest()
 			.logs()
 			.iter()
@@ -324,12 +324,13 @@ where
 				))
 			})
 			.find_map(|l| match l {
-				ConsensusLog::AuthoritiesChange(a) =>{
-					authorities_=a
-				},
+				ConsensusLog::AuthoritiesChange(a) => Some(a),
 				_ => None,
 			});
-
+		
+		if let Some(a) = new_auth {
+			authorities_=a;
+		}
 
 
 		// we add one to allow for some small drift.
