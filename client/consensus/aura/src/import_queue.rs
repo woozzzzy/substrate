@@ -229,7 +229,7 @@ where
 		sp_std::if_std!{
 			log::info!("------------------------");
 			log::info!("Block: {:?} Authorities are: {:?}",parent_hash,authorities_);
-			if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
+			if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
 				let next_authorities = authorities(refclient.clone(), &BlockId::Hash(hash))
 				.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 				log::info!("Block: {:?} Authorities are: {:?}",hash,next_authorities);
@@ -248,6 +248,16 @@ where
 			.map_err(Error::<B>::Inherent)?;
 
 		let slot_now = create_inherent_data_providers.slot();
+
+		if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
+			sp_std::if_std!{						
+				info!("before checked header 0x07e");
+
+
+			}
+		}
+
+
 
 		// we add one to allow for some small drift.
 		// FIXME #1019 in the future, alter this queue to allow deferring of
