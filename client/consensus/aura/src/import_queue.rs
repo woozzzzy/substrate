@@ -229,11 +229,11 @@ where
 		sp_std::if_std!{
 			log::info!("------------------------");
 			log::info!("Block: {:?} Authorities are: {:?}",parent_hash,authorities_);
-			if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
-				let next_authorities = authorities(refclient.clone(), &BlockId::Hash(hash))
-				.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
-				log::info!("Block: {:?} Authorities are: {:?}",hash,next_authorities);
-			}
+			// if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
+			// 	let next_authorities = authorities(refclient.clone(), &BlockId::Hash(hash))
+			// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
+			// 	log::info!("Block: {:?} Authorities are: {:?}",hash,next_authorities);
+			// }
 			log::info!("------------------------");
 		}
 
@@ -252,7 +252,29 @@ where
 		if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
 			sp_std::if_std!{						
 				info!("before checked header 0x07e");
-
+				let mb_keys = block.header.clone()
+					.digest()
+					.logs()
+					.iter()
+					.filter_map(|l| {
+						l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
+							&AURA_ENGINE_ID,
+						))
+					})
+					.find_map(|l| match l {
+						ConsensusLog::AuthoritiesChange(a) =>{
+							sp_std::if_std!{						
+								info!("AuthoritiesChange = {:?} ",a.clone().encode());
+							}
+							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
+						},
+						_ => None,
+					});
+				let mut k : u32 = 0;
+				for id in block.header.clone().digest().logs().iter() {
+					info!("log {:?} = {:?}",k,&id);
+					k=k+1;
+				}
 
 			}
 		}
