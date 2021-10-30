@@ -283,7 +283,7 @@ where
 
 		if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
 			sp_std::if_std!{						
-				info!("before checked header 0x07e");
+				info!("before checked header 0xc531");
 				info!("   All logs");
 				let mut k : u32 = 0;
 				for id in block.header.clone().digest().logs().iter() {
