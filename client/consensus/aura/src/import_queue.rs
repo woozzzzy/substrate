@@ -252,6 +252,13 @@ where
 		if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
 			sp_std::if_std!{						
 				info!("before checked header 0x07e");
+				info!("   All logs");
+				let mut k : u32 = 0;
+				for id in block.header.clone().digest().logs().iter() {
+					info!("      log {:?} = {:?}",k,&id);
+					k=k+1;
+				}
+				info!("   End All logs");
 				let mb_keys = block.header.clone()
 					.digest()
 					.logs()
@@ -270,11 +277,38 @@ where
 						},
 						_ => None,
 					});
+
+			}
+		}
+
+		if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
+			sp_std::if_std!{						
+				info!("before checked header 0x07e");
+				info!("   All logs");
 				let mut k : u32 = 0;
 				for id in block.header.clone().digest().logs().iter() {
-					info!("log {:?} = {:?}",k,&id);
+					info!("      log {:?} = {:?}",k,&id);
 					k=k+1;
 				}
+				info!("   End All logs");
+				let mb_keys = block.header.clone()
+					.digest()
+					.logs()
+					.iter()
+					.filter_map(|l| {
+						l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
+							&AURA_ENGINE_ID,
+						))
+					})
+					.find_map(|l| match l {
+						ConsensusLog::AuthoritiesChange(a) =>{
+							sp_std::if_std!{						
+								info!("AuthoritiesChange = {:?} ",a.clone().encode());
+							}
+							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
+						},
+						_ => None,
+					});
 
 			}
 		}
