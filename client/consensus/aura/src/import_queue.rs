@@ -224,7 +224,7 @@ where
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
 		let refclient=self.client.as_ref();
-		let authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		sp_std::if_std!{
 			log::info!("------------------------");
