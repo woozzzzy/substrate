@@ -314,6 +314,22 @@ where
 			}
 		}
 
+		let mb_keys = block.header.clone()
+			.digest()
+			.logs()
+			.iter()
+			.filter_map(|l| {
+				l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
+					&AURA_ENGINE_ID,
+				))
+			})
+			.find_map(|l| match l {
+				ConsensusLog::AuthoritiesChange(a) =>{
+					authorities_=a
+				},
+				_ => None,
+			});
+
 
 
 		// we add one to allow for some small drift.
