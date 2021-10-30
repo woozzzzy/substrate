@@ -316,11 +316,12 @@ where
 						))
 					})
 					.find_map(|l| match l {
-						sp_std::if_std!{						
-							info!("AuthoritiesChange = {:?} ",a.clone().encode());
-						}
-						ConsensusLog::AuthoritiesChange(a) =>
-							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())]),
+						ConsensusLog::AuthoritiesChange(a) =>{
+							sp_std::if_std!{						
+								info!("AuthoritiesChange = {:?} ",a.clone().encode());
+							}
+							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
+						},
 						_ => None,
 					});
 
