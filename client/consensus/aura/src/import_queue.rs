@@ -320,7 +320,7 @@ where
 		let block_number = block.header.clone().number().clone();
 
 		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-			block_number,
+			block_number.clone,
 			Default::default(),
 			Default::default(),
 			parent_hash,
@@ -348,15 +348,15 @@ where
 			});
 		
 		sp_std::if_std!{
-			log::info!("Authorities before= {:?}", authorities_);
-			log::info!("Alt Auth          = {:?}", alt_auth);
+			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
+			log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 		}
 		if let Some(a) = new_auth {
 			authorities_=a;
 		}
 		sp_std::if_std!{
-			log::info!("Authorities after= {:?}", authorities_);
-			log::info!("Alt Auth2         = {:?}", alt_auth);
+			log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
+			log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
 		}
 
 
