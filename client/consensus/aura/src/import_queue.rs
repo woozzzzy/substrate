@@ -330,7 +330,7 @@ where
 		let alt_auth=runtime_api
 				.authorities(at)
 				.ok()
-				.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
+				// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
 		let new_auth = block.header.clone()
