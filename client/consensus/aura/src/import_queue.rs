@@ -320,7 +320,7 @@ where
 		let block_number = block.header.clone().number().clone();
 
 		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-			block_number.clone,
+			block_number,
 			Default::default(),
 			Default::default(),
 			parent_hash,
