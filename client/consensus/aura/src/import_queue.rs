@@ -363,7 +363,7 @@ where
 			});
 		
 		sp_std::if_std!{
-			log::info!("{:?} hash {:?}, parent_hash {:?}", hash, parent_hash);
+			log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
 			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
 			log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 		}
