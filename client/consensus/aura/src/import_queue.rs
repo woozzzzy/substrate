@@ -314,10 +314,10 @@ where
 		// 	}
 		// }
 
-		let runtime_api = client.runtime_api();
+		let runtime_api = refclient.runtime_api();
 		let at = &BlockId::Hash(parent_hash);
 
-		let block_number = client.to_number(at)
+		let block_number = refclient.to_number(at)
 			.map_err(|e| format!("{:?}", e))?
 			.ok_or_else(||
 				format!("Could not get number for block `{:?}`.", at)
