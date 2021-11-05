@@ -314,6 +314,30 @@ where
 		// 	}
 		// }
 
+		let runtime_api = client.runtime_api();
+		let at = &BlockId::Hash(parent_hash);
+
+		let block_number = client.to_number(at);
+			.map_err(|e| Error::RuntimeApi(format!("{:?}", e)))?
+			.ok_or_else(||
+				Error::RuntimeApi(format!("Could not get number for block `{:?}`.", at))
+			)?;
+
+		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+				block_number + sp_runtime::traits::One::one(),
+				Default::default(),
+				Default::default(),
+				block_hash,
+				Default::default()),
+			).map_err(|e| Error::RuntimeApi(e.to_string()))?;
+
+
+		let alt_auth=runtime_api
+				.authorities(at)
+				.ok()
+				.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
+
+
 		let new_auth = block.header.clone()
 			.digest()
 			.logs()
@@ -328,9 +352,19 @@ where
 				_ => None,
 			});
 		
+		sp_std::if_std!{
+			log::info!("Authorities before= {:?}", authorities_);
+			log::info!("Alt Auth          = {:?}", alt_auth);
+		}
 		if let Some(a) = new_auth {
 			authorities_=a;
 		}
+		sp_std::if_std!{
+			log::info!("Authorities after= {:?}", authorities_);
+			log::info!("Alt Auth2         = {:?}", alt_auth);
+		}
+
+
 
 
 		// we add one to allow for some small drift.
