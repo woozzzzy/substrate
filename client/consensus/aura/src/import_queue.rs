@@ -318,9 +318,9 @@ where
 		let at = &BlockId::Hash(parent_hash);
 
 		let block_number = client.to_number(at);
-			.map_err(|e| Error::RuntimeApi(format!("{:?}", e)))?
+			.map_err(|e| format!("{:?}", e))?
 			.ok_or_else(||
-				Error::RuntimeApi(format!("Could not get number for block `{:?}`.", at))
+				format!("Could not get number for block `{:?}`.", at)
 			)?;
 
 		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
