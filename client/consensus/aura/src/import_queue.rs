@@ -323,13 +323,13 @@ where
 				Error::RuntimeApi(format!("Could not get number for block `{:?}`.", at))
 			)?;
 
-		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-				block_number + sp_runtime::traits::One::one(),
-				Default::default(),
-				Default::default(),
-				block_hash,
-				Default::default()),
-			).map_err(|e| Error::RuntimeApi(e.to_string()))?;
+		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+			block_number + sp_runtime::traits::One::one(),
+			Default::default(),
+			Default::default(),
+			block_hash,
+			Default::default()),
+		).map_err(|e| Error::RuntimeApi(e.to_string()))?;
 
 
 		let alt_auth=runtime_api
