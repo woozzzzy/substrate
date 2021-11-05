@@ -29,7 +29,7 @@ use sc_consensus::{
 };
 use sc_consensus_slots::{check_equivocation, CheckedHeader, InherentDataProviderExt};
 use sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_TRACE};
-use sp_api::{ApiExt, ProvideRuntimeApi};
+use sp_api::{ApiExt, ProvideRuntimeApi, Core};
 use sp_block_builder::BlockBuilder as BlockBuilderApi;
 use sp_blockchain::{
 	well_known_cache_keys::{self, Id as CacheKeyId},
@@ -317,11 +317,7 @@ where
 		let runtime_api = refclient.runtime_api();
 		let at = &BlockId::Hash(parent_hash);
 
-		let block_number = refclient.to_number(at)
-			.map_err(|e| format!("{:?}", e))?
-			.ok_or_else(||
-				format!("Could not get number for block `{:?}`.", at)
-			)?;
+		let block_number = block.header.clone().number();
 
 		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
 			block_number + sp_runtime::traits::One::one(),
