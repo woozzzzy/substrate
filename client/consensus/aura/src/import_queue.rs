@@ -327,10 +327,9 @@ where
 			block_number + sp_runtime::traits::One::one(),
 			Default::default(),
 			Default::default(),
-			block_hash,
+			parent_hash,
 			Default::default()),
-		).map_err(|e| Error::RuntimeApi(e.to_string()))?;
-
+		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
 		let alt_auth=runtime_api
 				.authorities(at)
