@@ -317,7 +317,7 @@ where
 		let runtime_api = refclient.runtime_api();
 		let at = &BlockId::Hash(parent_hash);
 
-		let block_number = block.header.block_number_from_id(at);
+		let block_number = block.header.clone().number().clone();
 
 		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
 			block_number,
