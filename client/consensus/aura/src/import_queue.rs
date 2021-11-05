@@ -224,6 +224,21 @@ where
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
 		let refclient=self.client.as_ref();
+
+		let runtime_api = refclient.runtime_api();
+		let at = &BlockId::Hash(parent_hash);
+
+		let block_number = block.header.clone().number().clone();
+
+		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+			block_number,
+			Default::default(),
+			Default::default(),
+			parent_hash,
+			Default::default()),
+		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+
+
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		// sp_std::if_std!{
@@ -314,50 +329,50 @@ where
 		// 	}
 		// }
 
-		let runtime_api = refclient.runtime_api();
-		let at = &BlockId::Hash(parent_hash);
+		// let runtime_api = refclient.runtime_api();
+		// let at = &BlockId::Hash(parent_hash);
 
-		let block_number = block.header.clone().number().clone();
+		// let block_number = block.header.clone().number().clone();
 
-		let dummy=runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-			block_number,
-			Default::default(),
-			Default::default(),
-			parent_hash,
-			Default::default()),
-		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+		// runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+		// 	block_number,
+		// 	Default::default(),
+		// 	Default::default(),
+		// 	parent_hash,
+		// 	Default::default()),
+		// ).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
-		let alt_auth=runtime_api
-				.authorities(at)
-				.ok();
-				// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
+		// let alt_auth=runtime_api
+		// 		.authorities(at)
+		// 		.ok();
+		// 		// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
-		let new_auth = block.header.clone()
-			.digest()
-			.logs()
-			.iter()
-			.filter_map(|l| {
-				l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
-					&AURA_ENGINE_ID,
-				))
-			})
-			.find_map(|l| match l {
-				ConsensusLog::AuthoritiesChange(a) => Some(a),
-				_ => None,
-			});
+		// let new_auth = block.header.clone()
+		// 	.digest()
+		// 	.logs()
+		// 	.iter()
+		// 	.filter_map(|l| {
+		// 		l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
+		// 			&AURA_ENGINE_ID,
+		// 		))
+		// 	})
+		// 	.find_map(|l| match l {
+		// 		ConsensusLog::AuthoritiesChange(a) => Some(a),
+		// 		_ => None,
+		// 	});
 		
-		sp_std::if_std!{
-			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
-			log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
-		}
-		if let Some(a) = new_auth {
-			authorities_=a;
-		}
-		sp_std::if_std!{
-			log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
-			log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
-		}
+		// sp_std::if_std!{
+		// 	log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
+		// 	log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
+		// }
+		// if let Some(a) = new_auth {
+		// 	authorities_=a;
+		// }
+		// sp_std::if_std!{
+		// 	log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
+		// 	log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
+		// }
 
 
 
