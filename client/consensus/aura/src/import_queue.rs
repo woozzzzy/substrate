@@ -329,7 +329,7 @@ where
 
 		let alt_auth=runtime_api
 				.authorities(at)
-				.ok()
+				.ok();
 				// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
