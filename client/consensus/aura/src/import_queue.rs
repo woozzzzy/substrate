@@ -329,10 +329,10 @@ where
 		// 	}
 		// }
 
-		let runtime_api = refclient.runtime_api();
-		let at = &BlockId::Hash(parent_hash);
+		// let runtime_api = refclient.runtime_api();
+		// let at = &BlockId::Hash(parent_hash);
 
-		let block_number = block.header.clone().number().clone();
+		// let block_number = block.header.clone().number().clone();
 
 		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
 			block_number,
