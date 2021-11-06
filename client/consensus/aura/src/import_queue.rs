@@ -359,32 +359,32 @@ where
 		// 		// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
-		let new_auth = block.header.clone()
-			.digest()
-			.logs()
-			.iter()
-			.filter_map(|l| {
-				l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
-					&AURA_ENGINE_ID,
-				))
-			})
-			.find_map(|l| match l {
-				ConsensusLog::AuthoritiesChange(a) => Some(a),
-				_ => None,
-			});
+		// let new_auth = block.header.clone()
+		// 	.digest()
+		// 	.logs()
+		// 	.iter()
+		// 	.filter_map(|l| {
+		// 		l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
+		// 			&AURA_ENGINE_ID,
+		// 		))
+		// 	})
+		// 	.find_map(|l| match l {
+		// 		ConsensusLog::AuthoritiesChange(a) => Some(a),
+		// 		_ => None,
+		// 	});
 		
-		sp_std::if_std!{
-			log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
-			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
-			// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
-		}
-		// if let Some(a) = new_auth {
-		// 	authorities_=a;
+		// sp_std::if_std!{
+		// 	log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
+		// 	log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
+		// 	// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 		// }
-		sp_std::if_std!{
-			log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
-			// log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
-		}
+		// // if let Some(a) = new_auth {
+		// // 	authorities_=a;
+		// // }
+		// sp_std::if_std!{
+		// 	log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
+		// 	// log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
+		// }
 
 
 
