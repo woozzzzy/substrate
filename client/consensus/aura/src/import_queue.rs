@@ -238,9 +238,14 @@ where
 			Default::default()),
 		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
+		let mut authorities_=runtime_api
+			.authorities(at)
+			.ok();
+			// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
-		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
-			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
+
+		// let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		// sp_std::if_std!{
 		// 	log::info!("------------------------");
 		// 	log::info!("Block: {:?} Authorities are: {:?}",parent_hash,authorities_);
@@ -367,9 +372,9 @@ where
 			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
 			// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 		}
-		if let Some(a) = new_auth {
-			authorities_=a;
-		}
+		// if let Some(a) = new_auth {
+		// 	authorities_=a;
+		// }
 		sp_std::if_std!{
 			log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
 			// log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
