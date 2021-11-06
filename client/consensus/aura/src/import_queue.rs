@@ -238,7 +238,7 @@ where
 			Default::default()),
 		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
-		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash));
 		if let Some(a) = runtime_api.authorities(at).ok() {
 			authorities_=a;
 		}
