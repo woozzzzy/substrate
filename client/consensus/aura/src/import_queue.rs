@@ -230,24 +230,19 @@ where
 
 		let block_number = block.header.clone().number().clone();
 
-		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-			block_number,
-			Default::default(),
-			Default::default(),
-			parent_hash,
-			Default::default()),
+		runtime_api.initialize_block(at, block.header
 		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		if let Some(a) = runtime_api.authorities(at).ok() {
 			let mut k : usize = 0;
-			for id in a.iter() {
-				if format!("{:?}",id)!=format!("{:?}",authorities_[k]) {
+			for id in authorities_.iter() {
+				if format!("{:?}",id)!=format!("{:?}",a[k]) {
 					sp_std::if_std!{
 						log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
-						log::info!("Authorities = {:?}", authorities_);
-						log::info!("Authorities2 = {:?}", a);
+						log::info!("Authorities = {:?}", id);
+						log::info!("Authorities2 = {:?}", a[k]);
 						// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 					}
 				}
