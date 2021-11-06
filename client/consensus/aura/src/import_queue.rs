@@ -230,28 +230,17 @@ where
 
 		let block_number = block.header.clone().number().clone();
 
-		runtime_api.initialize_block(at, &block.header
-		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+		runtime_api.initialize_block(at, &block.header)
+			.map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
-		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		// let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
+
+		let authorities=runtime_api
+			.authorities(at)
+			.ok()
+			.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
-		if let Some(a) = runtime_api.authorities(at).ok() {
-			let mut k : usize = 0;
-			for id in authorities_.iter() {
-				if format!("{:?}",id)!=format!("{:?}",a[k]) {
-					sp_std::if_std!{
-						log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
-						log::info!("Authorities = {:?}", id);
-						log::info!("Authorities2 = {:?}", a[k]);
-						// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
-					}
-				}
-				k=k+1;
-			}
-
-
-			authorities_=a;
-		}
 		
 		// let mut authorities_=runtime_api
 		// 	.authorities(at)
@@ -406,7 +395,7 @@ where
 			slot_now + 1,
 			block.header,
 			hash,
-			&authorities_[..],
+			&authorities[..],
 			self.check_for_equivocation,
 		)
 		.map_err(|e| e.to_string())?;
