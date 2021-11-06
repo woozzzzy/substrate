@@ -238,10 +238,15 @@ where
 			Default::default()),
 		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
-		let mut authorities_=runtime_api
-			.authorities(at)
-			.ok();
-			// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
+		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
+		if let Some(a) = runtime_api.authorities(at).ok() {
+			authorities_=a;
+		}
+		
+		// let mut authorities_=runtime_api
+		// 	.authorities(at)
+		// 	.ok();
+		// 	// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
 		// let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
