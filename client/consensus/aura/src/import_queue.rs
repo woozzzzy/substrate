@@ -329,18 +329,18 @@ where
 		// 	}
 		// }
 
-		// let runtime_api = refclient.runtime_api();
-		// let at = &BlockId::Hash(parent_hash);
+		let runtime_api = refclient.runtime_api();
+		let at = &BlockId::Hash(parent_hash);
 
-		// let block_number = block.header.clone().number().clone();
+		let block_number = block.header.clone().number().clone();
 
-		// runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-		// 	block_number,
-		// 	Default::default(),
-		// 	Default::default(),
-		// 	parent_hash,
-		// 	Default::default()),
-		// ).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+			block_number,
+			Default::default(),
+			Default::default(),
+			parent_hash,
+			Default::default()),
+		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
 		let alt_auth=runtime_api
 				.authorities(at)
