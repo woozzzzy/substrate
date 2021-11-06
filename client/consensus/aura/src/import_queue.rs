@@ -243,7 +243,7 @@ where
 		if let Some(a) = runtime_api.authorities(at).ok() {
 			let mut k : u32 = 0;
 			for id in a.iter() {
-				if a!=authorities_[k] {
+				if id!=authorities_[k].clone() {
 					sp_std::if_std!{
 						log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
 						log::info!("Authorities = {:?}", authorities_);
