@@ -230,13 +230,13 @@ where
 
 		let block_number = block.header.clone().number().clone();
 
-		// runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-		// 	block_number,
-		// 	Default::default(),
-		// 	Default::default(),
-		// 	parent_hash,
-		// 	Default::default()),
-		// ).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+			block_number,
+			Default::default(),
+			Default::default(),
+			parent_hash,
+			Default::default()),
+		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
 
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
@@ -334,18 +334,18 @@ where
 
 		// let block_number = block.header.clone().number().clone();
 
-		runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-			block_number,
-			Default::default(),
-			Default::default(),
-			parent_hash,
-			Default::default()),
-		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+		// runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
+		// 	block_number,
+		// 	Default::default(),
+		// 	Default::default(),
+		// 	parent_hash,
+		// 	Default::default()),
+		// ).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
-		let alt_auth=runtime_api
-				.authorities(at)
-				.ok();
-				// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
+		// let alt_auth=runtime_api
+		// 		.authorities(at)
+		// 		.ok();
+		// 		// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
 
 
 		let new_auth = block.header.clone()
@@ -365,14 +365,14 @@ where
 		sp_std::if_std!{
 			log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
 			log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
-			log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
+			// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
 		}
 		if let Some(a) = new_auth {
 			authorities_=a;
 		}
 		sp_std::if_std!{
 			log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
-			log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
+			// log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
 		}
 
 
