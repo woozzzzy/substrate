@@ -241,7 +241,7 @@ where
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		if let Some(a) = runtime_api.authorities(at).ok() {
-			let mut k : u32 = 0;
+			let mut k : usize = 0;
 			for id in a.iter() {
 				if id!=authorities_[k].clone() {
 					sp_std::if_std!{
