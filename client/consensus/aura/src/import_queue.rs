@@ -238,8 +238,6 @@ where
 
 		let authorities=runtime_api
 			.authorities(at)
-			.ok()
-			.ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into())
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		
 		// let mut authorities_=runtime_api
