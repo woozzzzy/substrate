@@ -230,7 +230,7 @@ where
 
 		let block_number = block.header.clone().number().clone();
 
-		runtime_api.initialize_block(at, block.header
+		runtime_api.initialize_block(at, &block.header
 		).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
 
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
