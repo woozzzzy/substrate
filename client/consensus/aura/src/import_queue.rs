@@ -241,6 +241,20 @@ where
 		let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 		if let Some(a) = runtime_api.authorities(at).ok() {
+			let mut k : u32 = 0;
+			for id in a.iter() {
+				if a!=authorities_[k] {
+					sp_std::if_std!{
+						log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
+						log::info!("Authorities = {:?}", authorities_);
+						log::info!("Authorities2 = {:?}", a);
+						// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
+					}
+				}
+				k=k+1;
+			}
+
+
 			authorities_=a;
 		}
 		
