@@ -223,41 +223,15 @@ where
 	) -> Result<(BlockImportParams<B, ()>, Option<Vec<(CacheKeyId, Vec<u8>)>>), String> {
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
-		let refclient=self.client.as_ref();
-
-		let runtime_api = refclient.runtime_api();
+		
+		let runtime_api = =self.client.runtime_api();
 		let at = &BlockId::Hash(parent_hash);
-
-		let block_number = block.header.clone().number().clone();
-
 		runtime_api.initialize_block(at, &block.header)
 			.map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
-
-		// let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
-		// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 
 		let authorities=runtime_api
 			.authorities(at)
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
-		
-		// let mut authorities_=runtime_api
-		// 	.authorities(at)
-		// 	.ok();
-		// 	// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
-
-
-		// let mut authorities_ = authorities(refclient, &BlockId::Hash(parent_hash))
-		// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
-		// sp_std::if_std!{
-		// 	log::info!("------------------------");
-		// 	log::info!("Block: {:?} Authorities are: {:?}",parent_hash,authorities_);
-		// 	// if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
-		// 	// 	let next_authorities = authorities(refclient.clone(), &BlockId::Hash(hash))
-		// 	// 	.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
-		// 	// 	log::info!("Block: {:?} Authorities are: {:?}",hash,next_authorities);
-		// 	// }
-		// 	log::info!("------------------------");
-		// }
 
 		let create_inherent_data_providers = self
 			.create_inherent_data_providers
@@ -270,120 +244,6 @@ where
 			.map_err(Error::<B>::Inherent)?;
 
 		let slot_now = create_inherent_data_providers.slot();
-
-		// if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
-		// 	sp_std::if_std!{						
-		// 		info!("before checked header 0x07e");
-		// 		info!("   All logs");
-		// 		let mut k : u32 = 0;
-		// 		for id in block.header.clone().digest().logs().iter() {
-		// 			info!("      log {:?} = {:?}",k,&id);
-		// 			k=k+1;
-		// 		}
-		// 		info!("   End All logs");
-		// 		let mb_keys = block.header.clone()
-		// 			.digest()
-		// 			.logs()
-		// 			.iter()
-		// 			.filter_map(|l| {
-		// 				l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
-		// 					&AURA_ENGINE_ID,
-		// 				))
-		// 			})
-		// 			.find_map(|l| match l {
-		// 				ConsensusLog::AuthoritiesChange(a) =>{
-		// 					sp_std::if_std!{						
-		// 						info!("AuthoritiesChange = {:?} ",a.clone().encode());
-		// 					}
-		// 					Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
-		// 				},
-		// 				_ => None,
-		// 			});
-
-		// 	}
-		// }
-
-		// if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
-		// 	sp_std::if_std!{						
-		// 		info!("before checked header 0xc531");
-		// 		info!("   All logs");
-		// 		let mut k : u32 = 0;
-		// 		for id in block.header.clone().digest().logs().iter() {
-		// 			info!("      log {:?} = {:?}",k,&id);
-		// 			k=k+1;
-		// 		}
-		// 		info!("   End All logs");
-		// 		let mb_keys = block.header.clone()
-		// 			.digest()
-		// 			.logs()
-		// 			.iter()
-		// 			.filter_map(|l| {
-		// 				l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
-		// 					&AURA_ENGINE_ID,
-		// 				))
-		// 			})
-		// 			.find_map(|l| match l {
-		// 				ConsensusLog::AuthoritiesChange(a) =>{
-		// 					sp_std::if_std!{						
-		// 						info!("AuthoritiesChange = {:?} ",a.clone().encode());						
-		// 						info!("AuthoritiesChange non-encoded = {:?} ",a.clone());
-		// 					}
-		// 					Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
-		// 				},
-		// 				_ => None,
-		// 			});
-
-		// 	}
-		// }
-
-		// let runtime_api = refclient.runtime_api();
-		// let at = &BlockId::Hash(parent_hash);
-
-		// let block_number = block.header.clone().number().clone();
-
-		// runtime_api.initialize_block(at, &sp_runtime::traits::Header::new(
-		// 	block_number,
-		// 	Default::default(),
-		// 	Default::default(),
-		// 	parent_hash,
-		// 	Default::default()),
-		// ).map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
-
-		// let alt_auth=runtime_api
-		// 		.authorities(at)
-		// 		.ok();
-		// 		// .ok_or_else(|| sp_consensus::Error::InvalidAuthoritiesSet.into());
-
-
-		// let new_auth = block.header.clone()
-		// 	.digest()
-		// 	.logs()
-		// 	.iter()
-		// 	.filter_map(|l| {
-		// 		l.try_to::<ConsensusLog<AuthorityId<P>>>(OpaqueDigestItemId::Consensus(
-		// 			&AURA_ENGINE_ID,
-		// 		))
-		// 	})
-		// 	.find_map(|l| match l {
-		// 		ConsensusLog::AuthoritiesChange(a) => Some(a),
-		// 		_ => None,
-		// 	});
-		
-		// sp_std::if_std!{
-		// 	log::info!("{:?} hash {:?}, parent_hash {:?}", block.header.clone().number(), hash, parent_hash);
-		// 	log::info!("{:?} Authorities before= {:?}", block.header.clone().number(), authorities_);
-		// 	// log::info!("{:?} Alt Auth          = {:?}", block.header.clone().number(), alt_auth);
-		// }
-		// // if let Some(a) = new_auth {
-		// // 	authorities_=a;
-		// // }
-		// sp_std::if_std!{
-		// 	log::info!("{:?} Authorities after= {:?}", block.header.clone().number(), authorities_);
-		// 	// log::info!("{:?} Alt Auth2         = {:?}", block.header.clone().number(), alt_auth);
-		// }
-
-
-
 
 		// we add one to allow for some small drift.
 		// FIXME #1019 in the future, alter this queue to allow deferring of
@@ -440,7 +300,6 @@ where
 					"pre_header" => ?pre_header,
 				);
 
-				let pr = pre_header.clone();
 				// Look for an authorities-change log.
 				let maybe_keys = pre_header
 					.digest()
@@ -452,12 +311,8 @@ where
 						))
 					})
 					.find_map(|l| match l {
-						ConsensusLog::AuthoritiesChange(a) =>{
-							// sp_std::if_std!{						
-							// 	info!("AuthoritiesChange = {:?} ",a.clone().encode());
-							// }
-							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())])
-						},
+						ConsensusLog::AuthoritiesChange(a) =>
+							Some(vec![(well_known_cache_keys::AUTHORITIES, a.encode())]),
 						_ => None,
 					});
 
@@ -466,35 +321,6 @@ where
 				block.fork_choice = Some(ForkChoiceStrategy::LongestChain);
 				block.post_hash = Some(hash);
 
-
-				// if format!("{:?}",hash)=="0x07e9447f20283c73c3fe2cfa1394c8c7175ab7ff3f06a295de3c7c3c02729b85"{
-				// 	sp_std::if_std!{						
-				// 		info!("relevant change hash 0x07e");
-				// 		let mut k : u32 = 0;
-				// 		for id in pr.digest().logs().iter() {
-				// 			info!("log {:?} = {:?}",k,&id);
-				// 			k=k+1;
-				// 		}
-				// 		if let Some(keys_)=maybe_keys.clone(){
-				// 			info!("hash = {:?}, keys = {:?}",hash,keys_);
-				// 		}
-				// 	}
-				// }
-
-
-				// if format!("{:?}",hash)=="0xc5318891a7cfbef317649837c3788adadf292a4eb574428f600e0e30b42773b7"{
-				// 	sp_std::if_std!{						
-				// 		info!("relevant change hash");
-				// 		let mut k : u32 = 0;
-				// 		for id in pr.digest().logs().iter() {
-				// 			info!("log {:?} = {:?}",k,&id);
-				// 			k=k+1;
-				// 		}
-				// 		if let Some(keys_)=maybe_keys.clone(){
-				// 			info!("hash = {:?}, keys = {:?}",hash,keys_);
-				// 		}
-				// 	}
-				// }
 				Ok((block, maybe_keys))
 			},
 			CheckedHeader::Deferred(a, b) => {
