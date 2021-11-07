@@ -29,7 +29,7 @@ use sc_consensus::{
 };
 use sc_consensus_slots::{check_equivocation, CheckedHeader, InherentDataProviderExt};
 use sc_telemetry::{telemetry, TelemetryHandle, CONSENSUS_DEBUG, CONSENSUS_TRACE};
-use sp_api::{ApiExt, ProvideRuntimeApi};
+use sp_api::{ApiExt, ProvideRuntimeApi, Core};
 use sp_block_builder::BlockBuilder as BlockBuilderApi;
 use sp_blockchain::{
 	well_known_cache_keys::{self, Id as CacheKeyId},
@@ -210,7 +210,14 @@ where
 	) -> Result<(BlockImportParams<B, ()>, Option<Vec<(CacheKeyId, Vec<u8>)>>), String> {
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
-		let authorities = authorities(self.client.as_ref(), &BlockId::Hash(parent_hash))
+		
+		let runtime_api = self.client.runtime_api();
+		let at = &BlockId::Hash(parent_hash);
+		runtime_api.initialize_block(at, &block.header)
+			.map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
+
+		let authorities=runtime_api
+			.authorities(at)
 			.map_err(|e| format!("Could not fetch authorities at {:?}: {:?}", parent_hash, e))?;
 
 		let create_inherent_data_providers = self
