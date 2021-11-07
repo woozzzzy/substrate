@@ -224,7 +224,7 @@ where
 		let hash = block.header.hash();
 		let parent_hash = *block.header.parent_hash();
 		
-		let runtime_api = =self.client.runtime_api();
+		let runtime_api = self.client.runtime_api();
 		let at = &BlockId::Hash(parent_hash);
 		runtime_api.initialize_block(at, &block.header)
 			.map_err(|e| format!("Error initializing block {:?}: {:?}", parent_hash, e))?;
